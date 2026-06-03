@@ -1,6 +1,6 @@
 {
-  "name": "Eventos",
-  "short_name": "Eventos",
+  "name": "Colaboradores",
+  "short_name": "Colaboradores",
   "description": "Gestión de eventos y materiales",
   "start_url": "./",
   "display": "standalone",
