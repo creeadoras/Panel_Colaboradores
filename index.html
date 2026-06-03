@@ -7,6 +7,21 @@
 
 <title>Cree Adoras — Colaboradores</title>
 
+
+<link rel="manifest" href="manifest.json">
+
+<meta name="theme-color" content="#b98558">
+
+<meta name="mobile-web-app-capable" content="yes">
+
+<meta name="apple-mobile-web-app-capable" content="yes">
+
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+
+<meta name="apple-mobile-web-app-title" content="Eventos">
+
+<link rel="apple-touch-icon" href="logo192.png">
+
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
@@ -795,6 +810,9 @@ const LOGO =
 
 function App(){
 
+const [installPrompt,setInstallPrompt] =
+useState(null);
+
 
 const [busquedaMaterial,setBusquedaMaterial] =
 useState("");
@@ -878,6 +896,45 @@ useState(false);
 
   },[]);
 
+useEffect(()=>{
+
+  const handler = e=>{
+
+    e.preventDefault();
+
+    setInstallPrompt(e);
+
+  };
+
+  window.addEventListener(
+    "beforeinstallprompt",
+    handler
+  );
+
+  return ()=>{
+
+    window.removeEventListener(
+      "beforeinstallprompt",
+      handler
+    );
+
+  };
+
+},[]);
+
+
+
+async function instalarApp(){
+
+  if(!installPrompt){
+    return;
+  }
+
+  installPrompt.prompt();
+
+  await installPrompt.userChoice;
+
+}
 
 
 function nuevaEmpresa(){
@@ -2123,8 +2180,18 @@ checklist.filter(
           <>
 
             <div className="page-title">
-              Dashboard
+              Dashboard 
+  <button
+    className="btn btn-green"
+    onClick={instalarApp}
+  >
+    📲 Instalar App
+  </button>
             </div>
+
+
+
+
 
             <div className="stats-grid">
 
@@ -3574,6 +3641,18 @@ checklist.filter(
     </div>
 
   );
+
+}
+
+
+if ("serviceWorker" in navigator) {
+
+  window.addEventListener("load", ()=>{
+
+    navigator.serviceWorker
+      .register("./service-worker.js");
+
+  });
 
 }
 
