@@ -5,7 +5,7 @@
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
-<title>Cree Adoras — Colaboradores</title>
+<title>Cree Adoras / Colaboradores</title>
 
 
 <link rel="manifest" href="manifest.json">
@@ -38,6 +38,17 @@
 </head>
 
 <body>
+
+<div id="webSplash">
+  <div class="webSplash-inner">
+    <img
+      class="webSplash-logo"
+      src="https://uarfndtspaejhddcnsxc.supabase.co/storage/v1/object/public/imagenes/logo.jpg"
+      alt="Cree Adoras"
+    />
+    <div class="webSplash-title">Diseño y Producción de Eventos</div>
+  </div>
+</div>
 
 <div id="root"></div>
 
@@ -776,7 +787,108 @@ body{
   }
 
 }
+#webSplash{
+  position:fixed;
+  inset:0;
+  z-index:999999;
+  background:linear-gradient(135deg,#f6f1eb,#efe4d8);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:opacity .45s ease, visibility .45s ease;
+}
 
+#webSplash.splash-hide{
+  opacity:0;
+  visibility:hidden;
+}
+
+.webSplash-inner{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:18px;
+}
+
+.webSplash-logo{
+  width:160px;
+  height:160px;
+  border-radius:36px;
+  object-fit:cover;
+  background:white;
+  padding:8px;
+  box-shadow:0 18px 45px rgba(0,0,0,.18);
+}
+
+.webSplash-title{
+  font-size:26px;
+  font-weight:800;
+  color:#8a5a34;
+}
+
+.preparado-ok{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin-top:10px;
+  padding:8px 12px;
+  border-radius:999px;
+  background:#dcfce7;
+  color:#166534;
+  font-weight:800;
+  width:max-content;
+}
+
+.warning-box{
+  margin-top:14px;
+  padding:12px 14px;
+  border-radius:16px;
+  background:#fff7ed;
+  border:1px solid #fed7aa;
+  color:#9a3412;
+  font-weight:700;
+}
+
+.warning-box ul{
+  margin:8px 0 0 18px;
+  font-weight:600;
+}
+
+.control-stage-note{
+  margin:0 0 18px;
+  padding:12px 14px;
+  border-radius:16px;
+  background:#f8fafc;
+  border:1px solid #e2e8f0;
+  color:#334155;
+  font-weight:700;
+}
+
+.vehicle-fields{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:12px;
+}
+
+.vehicle-fields label{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  font-size:13px;
+  font-weight:800;
+}
+
+.vehicle-fields input,
+.vehicle-fields textarea{
+  width:100%;
+}
+
+@media(max-width:640px){
+  .vehicle-fields{
+    grid-template-columns:1fr;
+  }
+}
 
 </style>
 
@@ -896,6 +1008,27 @@ useState(false);
 
   },[]);
 
+  useEffect(()=>{
+
+    const splash = document.getElementById("webSplash");
+
+    if(!splash){
+      return;
+    }
+
+    const timer = setTimeout(()=>{
+
+      splash.classList.add("splash-hide");
+
+      setTimeout(()=>{
+        splash.remove();
+      },500);
+
+    },900);
+
+    return ()=>clearTimeout(timer);
+
+  },[]);
 useEffect(()=>{
 
   const handler = e=>{
@@ -1025,7 +1158,7 @@ async function eliminarMaterial(material){
 
   const confirmado =
   window.confirm(
-    `¿Eliminar el material "${material.nombre}"?`
+    `Â¿Eliminar el material "${material.nombre}"?`
   );
 
   if(!confirmado){
@@ -1190,18 +1323,20 @@ function presupuestosFiltrados(){
   const busqueda =
   normalizarTexto(busquedaPresupuesto);
 
+  const visibles =
+  presupuestos.filter(p=>p.archivado !== true);
+
   if(!busqueda){
-    return presupuestos;
+    return visibles;
   }
 
-  return presupuestos.filter(p=>
+  return visibles.filter(p=>
     normalizarTexto(p.cliente).includes(busqueda) ||
     normalizarTexto(p.estado).includes(busqueda) ||
     normalizarTexto(p.fecha).includes(busqueda)
   );
 
 }
-
 function mesPresupuesto(fecha){
 
   if(!fecha){
@@ -1269,11 +1404,88 @@ function materialIdItem(item){
 
 }
 
+function controlEtapaConfig(tipo){
+
+  const configs = {
+    carga:{
+      titulo:"Control de carga en camion",
+      campo:"cargado",
+      label:"Cargado en el camion",
+      completo:"cargado completo en el camion",
+      incompleto:"carga incompleta - faltan materiales",
+      nota:"Marcá todo lo que efectivamente se carga en el camion antes de salir."
+    },
+    llegada_evento:{
+      titulo:"Control de llegada al evento",
+      campo:"llegada_evento_ok",
+      label:"Llego al evento",
+      completo:"llegada al evento completa",
+      incompleto:"llegada al evento con faltantes",
+      nota:"Controlá que todo lo cargado haya llegado al evento."
+    },
+    salida_evento:{
+      titulo:"Control de carga al terminar el evento",
+      campo:"salida_evento_ok",
+      label:"Vuelve en camion",
+      completo:"salida del evento completa",
+      incompleto:"salida con materiales en otro vehiculo",
+      nota:"Si algo no vuelve en el camion, dejá asentado el vehiculo y destino."
+    },
+    descarga_deposito:{
+      titulo:"Control de descarga en deposito",
+      campo:"descarga_deposito_ok",
+      label:"Descargado en deposito",
+      completo:"devuelto_correcto",
+      incompleto:"deposito con faltantes",
+      nota:"Control final de descarga, incluyendo camion y otros vehiculos."
+    }
+  };
+
+  return configs[tipo] || configs.carga;
+
+}
+
+function itemsFaltantesControl(checklist,tipo){
+
+  const config = controlEtapaConfig(tipo);
+
+  return (checklist || []).filter(item=>!item[config.campo]);
+
+}
+
+function nombreItemControl(item){
+
+  return item.label || item.nombre || "Material sin nombre";
+
+}
+function tipoFaltantePorEstado(estado){
+
+  const texto = normalizarTexto(estado);
+
+  if(texto.includes("carga incompleta")){
+    return "carga";
+  }
+
+  if(texto.includes("llegada") && texto.includes("faltantes")){
+    return "llegada_evento";
+  }
+
+  if(texto.includes("salida") && texto.includes("otro vehiculo")){
+    return "salida_evento";
+  }
+
+  if(texto.includes("deposito") && texto.includes("faltantes")){
+    return "descarga_deposito";
+  }
+
+  return "";
+
+}
 function abrirControl(presupuesto,tipo){
 
   setControlModal({
     tipo,
-    presupuesto
+    presupuesto:JSON.parse(JSON.stringify(presupuesto))
   });
 
 }
@@ -1314,7 +1526,6 @@ function actualizarItemControl(idx,cambios){
   });
 
 }
-
 function actualizarPresupuestoLocal(id,cambios){
 
   setPresupuestos(prev=>
@@ -1400,7 +1611,7 @@ async function marcarListoParaCargar(presupuesto){
 
 }
 
-async function guardarControlCarga(){
+async function guardarControlEtapa(){
 
   if(!controlModal){
     return;
@@ -1409,17 +1620,38 @@ async function guardarControlCarga(){
   const presupuesto =
   controlModal.presupuesto;
 
-  const checklist =
+  let checklist =
   presupuesto.checklist || [];
 
-  const todoCargado =
-  checklist.length > 0 &&
-  checklist.every(item=>item.cargado);
+  const config =
+  controlEtapaConfig(controlModal.tipo);
+
+  const faltantes =
+  itemsFaltantesControl(checklist,controlModal.tipo);
+
+  const todoCompleto =
+  checklist.length > 0 && faltantes.length === 0;
+
+  if(controlModal.tipo === "descarga_deposito"){
+
+    checklist = checklist.map(item=>({
+      ...item,
+      regreso_ok:!!item.descarga_deposito_ok,
+      recibido:item.descarga_deposito_ok
+        ? Number(item.enviado || cantidadItem(item))
+        : (item.recibido || 0)
+    }));
+
+    if(todoCompleto){
+      checklist = await devolverStockSiCorresponde(checklist);
+    }
+
+  }
 
   const estado =
-  todoCargado
-  ? "cargado"
-  : presupuesto.estado;
+  todoCompleto
+  ? config.completo
+  : config.incompleto;
 
   const ok =
   await guardarChecklistPresupuesto(
@@ -1434,6 +1666,16 @@ async function guardarControlCarga(){
     cerrarControl();
   }
 
+}
+
+async function guardarControlCarga(){
+  return guardarControlEtapa();
+}
+
+
+
+async function guardarControlRegreso(){
+  return guardarControlEtapa();
 }
 
 async function devolverStockSiCorresponde(checklist){
@@ -1468,9 +1710,7 @@ async function devolverStockSiCorresponde(checklist){
     const nuevoStock =
     Number(material.stock || 0) + cantidad;
 
-    const {
-      error
-    } = await db
+    const { error } = await db
     .from("materiales")
     .update({
       stock:nuevoStock
@@ -1504,52 +1744,6 @@ async function devolverStockSiCorresponde(checklist){
   );
 
 }
-
-async function guardarControlRegreso(){
-
-  if(!controlModal){
-    return;
-  }
-
-  const presupuesto =
-  controlModal.presupuesto;
-
-  let checklist =
-  presupuesto.checklist || [];
-
-  const todoCorrecto =
-  checklist.length > 0 &&
-  checklist.every(item=>item.regreso_ok);
-
-  if(todoCorrecto){
-
-    checklist =
-    await devolverStockSiCorresponde(checklist);
-
-  }
-
-  const estado =
-  todoCorrecto
-  ? "devuelto_correcto"
-  : "regreso_con_observaciones";
-
-  const ok =
-  await guardarChecklistPresupuesto(
-    presupuesto,
-    checklist,
-    {
-      estado
-    }
-  );
-
-  if(ok){
-    cerrarControl();
-  }
-
-}
-
-
-
 function fechaKey(fecha){
 
   if(!fecha){
@@ -1587,7 +1781,7 @@ async function eliminarItemChecklist(
 
 const confirmar =
 window.confirm(
-  "¿Eliminar este elemento?"
+  "Â¿Eliminar este elemento?"
 );
 
 if(!confirmar){
@@ -2001,11 +2195,19 @@ checklist.filter(
     }
 
     return {
-  ...item,
-  ready:!item.ready
-};
+      ...item,
+      ready:!item.ready
+    };
 
   });
+
+  const todoPreparado =
+  nuevos.length > 0 && nuevos.every(item=>item.ready);
+
+  const cambios = {
+    checklist:nuevos,
+    ...(todoPreparado ? { estado:"preparado" } : {})
+  };
 
   setPresupuestos(prev=>
     ordenarPresupuestos(
@@ -2013,20 +2215,16 @@ checklist.filter(
         p.id === presupuesto.id
         ? {
             ...p,
-            checklist:nuevos
+            ...cambios
           }
         : p
       )
     )
   );
 
-  const {
-    error
-  } = await db
+  const { error } = await db
   .from("presupuestos")
-  .update({
-    checklist:nuevos
-  })
+  .update(cambios)
   .eq("id",presupuesto.id);
 
   if(error){
@@ -2049,8 +2247,6 @@ checklist.filter(
   }
 
 }
-
-
   async function cambiarEstado(
     presupuesto,
     estado
@@ -2103,7 +2299,7 @@ checklist.filter(
             setSection("dashboard")
           }
         >
-          Dashboard
+          Inicio
         </button>
 
         <button
@@ -2180,8 +2376,17 @@ checklist.filter(
           <>
 
             <div className="page-title">
-              Dashboard 
-             </div>
+              Inicio 
+  <button
+    className="btn btn-green"
+    onClick={instalarApp}
+  >
+    Instalar App
+  </button>
+            </div>
+
+
+
 
 
             <div className="stats-grid">
@@ -2373,7 +2578,7 @@ checklist.filter(
   <>
 
     <div className="page-title">
-      Preparación Eventos
+      Preparación de materiales para los Eventos
     </div>
 
     <div className="search-bar">
@@ -2434,8 +2639,18 @@ checklist.filter(
 
                   </div>
 
-                  <div className="estado-pill">
-                    {p.estado}
+                                    <div>
+
+                    <div className="estado-pill">
+                      {p.estado}
+                    </div>
+
+                    {p.estado === "preparado" && (
+                      <div className="preparado-ok">
+                        OK Preparado
+                      </div>
+                    )}
+
                   </div>
 
                 </div>
@@ -2455,7 +2670,20 @@ checklist.filter(
                   {progreso}% completado
                 </div>
 
-                <div className="checklist-list">
+
+                {tipoFaltantePorEstado(p.estado) && itemsFaltantesControl(p.checklist || [],tipoFaltantePorEstado(p.estado)).length > 0 && (
+                  <div className="warning-box">
+                    Materiales pendientes:
+                    <ul>
+                      {itemsFaltantesControl(p.checklist || [],tipoFaltantePorEstado(p.estado)).map((item,idx)=>(
+                        <li key={item.id || idx}>
+                          {nombreItemControl(item)}
+                          {item.vehiculo_pendiente || item.vehiculo_alternativo ? ` - ${item.vehiculo_pendiente || item.vehiculo_alternativo}` : ""}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}                <div className="checklist-list">
 
   {(p.checklist || [])
   .map((item,idx)=>(
@@ -2564,7 +2792,7 @@ checklist.filter(
           )
         }
       >
-        ×
+        X 
       </button>
 
     </div>
@@ -2663,8 +2891,8 @@ checklist.filter(
                       <span>
                         {
                           e.presente
-                          ? "✅"
-                          : "⏳"
+                          ? "âœ…"
+                          : "â³"
                         }
                       </span>
 
@@ -2677,27 +2905,6 @@ checklist.filter(
                 <div className="actions">
 
                   <button
-                    className="btn green"
-                    onClick={()=>
-                      cambiarEstado(
-                        p,
-                        "preparado"
-                      )
-                    }
-                  >
-                    Preparado
-                  </button>
-
-                  <button
-                    className="btn warning"
-                    onClick={()=>
-                      marcarListoParaCargar(p)
-                    }
-                  >
-                    Listo para cargar
-                  </button>
-
-                  <button
                     className="btn"
                     onClick={()=>
                       abrirControl(
@@ -2706,7 +2913,19 @@ checklist.filter(
                       )
                     }
                   >
-                    Control carga
+                    Control carga camion
+                  </button>
+
+                  <button
+                    className="btn warning"
+                    onClick={()=>
+                      abrirControl(
+                        p,
+                        "llegada_evento"
+                      )
+                    }
+                  >
+                    Control llegada evento
                   </button>
 
                   <button
@@ -2714,11 +2933,23 @@ checklist.filter(
                     onClick={()=>
                       abrirControl(
                         p,
-                        "regreso"
+                        "salida_evento"
                       )
                     }
                   >
-                    Control regreso
+                    Control salida evento
+                  </button>
+
+                  <button
+                    className="btn green"
+                    onClick={()=>
+                      abrirControl(
+                        p,
+                        "descarga_deposito"
+                      )
+                    }
+                  >
+                    Control descarga deposito
                   </button>
 
                 </div>
@@ -2780,7 +3011,7 @@ checklist.filter(
     {!busquedaMaterial.trim() && (
 
       <div className="stat-card">
-        Buscá un material para verlo.
+        Escribí el nombre de un material para verlo.
       </div>
 
     )}
@@ -2895,7 +3126,7 @@ checklist.filter(
                 onClick={()=>{
   if(
     !window.confirm(
-      "¿Eliminar este material?"
+      "Â¿Eliminar este material?"
     )
   ) return;
 
@@ -3085,7 +3316,7 @@ checklist.filter(
           className="modal-close"
           onClick={cerrarModalMaterial}
         >
-          ×
+          X
         </button>
 
       </div>
@@ -3186,7 +3417,13 @@ checklist.filter(
 
 
 
-{controlModal && (
+{controlModal && (()=>{
+
+  const config = controlEtapaConfig(controlModal.tipo);
+  const checklist = controlModal.presupuesto.checklist || [];
+  const faltantes = itemsFaltantesControl(checklist,controlModal.tipo);
+
+  return (
 
   <div className="modal-backdrop">
 
@@ -3194,27 +3431,35 @@ checklist.filter(
 
       <div className="modal-header">
 
-        <h2>
-          {
-            controlModal.tipo === "carga"
-            ? "Control de carga"
-            : "Control de regreso"
-          }
-        </h2>
+        <h2>{config.titulo}</h2>
 
         <button
           className="modal-close"
           onClick={cerrarControl}
         >
-          ×
+          X
         </button>
 
       </div>
 
+      <div className="control-stage-note">
+        {config.nota}
+      </div>
+
+      {faltantes.length > 0 && (
+        <div className="warning-box">
+          Faltan controlar {faltantes.length} materiales:
+          <ul>
+            {faltantes.map((item,idx)=>(
+              <li key={item.id || idx}>{nombreItemControl(item)}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
       <div className="control-list">
 
-        {(controlModal.presupuesto.checklist || [])
-.map((item,idx)=>(
+        {checklist.map((item,idx)=>(
 
   <div
     className="control-row"
@@ -3252,202 +3497,90 @@ checklist.filter(
 
       <div>
 
-        <div
-          className="control-row-title"
-        >
-          {item.label}
+        <div className="control-row-title">
+          {nombreItemControl(item)}
         </div>
 
         {item.descripcion && (
-
-          <div
-            style={{
-              fontSize:"13px",
-              opacity:.8,
-              marginTop:"4px"
-            }}
-          >
+          <div style={{fontSize:"13px",opacity:.8,marginTop:"4px"}}>
             {item.descripcion}
           </div>
-
         )}
 
-        <div
-          style={{
-            fontSize:"13px",
-            opacity:.7
-          }}
-        >
-          Cantidad:
-          {" "}
-          {cantidadItem(item)}
+        <div style={{fontSize:"13px",opacity:.7}}>
+          Cantidad: {cantidadItem(item)}
         </div>
 
       </div>
 
     </div>
 
-    {controlModal.tipo === "carga" && (
+    <label>
+      <span>{config.label}</span>
+      <input
+        type="checkbox"
+        checked={!!item[config.campo]}
+        onChange={e=>
+          actualizarItemControl(
+            idx,
+            {
+              [config.campo]:e.target.checked
+            }
+          )
+        }
+      />
+    </label>
 
-      <label>
-
-        <span>
-          Cargado para el evento
-        </span>
-
-        <input
-          type="checkbox"
-          checked={!!item.cargado}
-          onChange={e=>
-            actualizarItemControl(
-              idx,
-              {
-                cargado:e.target.checked
-              }
-            )
-          }
-        />
-
-      </label>
-
-    )}
-
-    {controlModal.tipo === "regreso" && (
-
-      <>
-
-        <div className="control-grid">
-
-          <label>
-
-            Enviado
-
-            <input
-              type="number"
-              min="0"
-              value={
-                item.enviado ||
-                cantidadItem(item)
-              }
-              onChange={e=>
-                actualizarItemControl(
-                  idx,
-                  {
-                    enviado:Number(
-                      e.target.value
-                    )
-                  }
-                )
-              }
-            />
-
-          </label>
-
-          <label>
-
-            Recibido
-
-            <input
-              type="number"
-              min="0"
-              value={item.recibido || ""}
-              onChange={e=>{
-
-                const recibido =
-                Number(e.target.value);
-
-                const enviado =
-                Number(
-                  item.enviado ||
-                  cantidadItem(item)
-                );
-
-                actualizarItemControl(
-                  idx,
-                  {
-                    recibido,
-                    regreso_ok:
-                    recibido === enviado
-                  }
-                );
-
-              }}
-            />
-
-          </label>
-
-        </div>
-
+    {controlModal.tipo === "salida_evento" && !item.salida_evento_ok && (
+      <div className="vehicle-fields">
         <label>
-
-          <span>
-            Volvió correctamente
-          </span>
-
+          Vehiculo alternativo
           <input
-            type="checkbox"
-            checked={!!item.regreso_ok}
-            onChange={e=>{
-
-              const enviado =
-              Number(
-                item.enviado ||
-                cantidadItem(item)
-              );
-
-              actualizarItemControl(
-                idx,
-                {
-                  regreso_ok:
-                  e.target.checked,
-
-                  recibido:
-                  e.target.checked
-                  ? enviado
-                  : (item.recibido || "")
-                }
-              );
-
-            }}
+            value={item.vehiculo_alternativo || ""}
+            placeholder="Ej: camioneta, auto, flete"
+            onChange={e=>
+              actualizarItemControl(idx,{vehiculo_alternativo:e.target.value})
+            }
           />
-
         </label>
 
-        {!item.regreso_ok && (
+        <label>
+          A donde se lleva
+          <input
+            value={item.destino_alternativo || ""}
+            placeholder="Ej: deposito norte, casa cliente"
+            onChange={e=>
+              actualizarItemControl(idx,{destino_alternativo:e.target.value})
+            }
+          />
+        </label>
+      </div>
+    )}
 
-          <label>
+    {controlModal.tipo === "descarga_deposito" && !item.descarga_deposito_ok && (
+      <div className="vehicle-fields">
+        <label>
+          Vehiculo donde quedo
+          <input
+            value={item.vehiculo_pendiente || item.vehiculo_alternativo || ""}
+            placeholder="Vehiculo pendiente"
+            onChange={e=>
+              actualizarItemControl(idx,{vehiculo_pendiente:e.target.value})
+            }
+          />
+        </label>
 
-            Detalle si volvió menos o con problema
-
-            <textarea
-              value={
-                item.regreso_detalle || ""
-              }
-              onChange={e=>
-                actualizarItemControl(
-                  idx,
-                  {
-                    regreso_detalle:
-                    e.target.value
-                  }
-                )
-              }
-            />
-
-          </label>
-
-        )}
-
-        {item.stock_devuelto && (
-
-          <div className="badge">
-            Stock ya devuelto
-          </div>
-
-        )}
-
-      </>
-
+        <label>
+          Observacion para reclamar
+          <textarea
+            value={item.reclamo_detalle || ""}
+            placeholder="Detalle de faltante, responsable o destino"
+            onChange={e=>
+              actualizarItemControl(idx,{reclamo_detalle:e.target.value})
+            }
+          />
+        </label>
+      </div>
     )}
 
   </div>
@@ -3467,13 +3600,9 @@ checklist.filter(
 
         <button
           className="btn green"
-          onClick={
-            controlModal.tipo === "carga"
-            ? guardarControlCarga
-            : guardarControlRegreso
-          }
+          onClick={guardarControlEtapa}
         >
-          Guardar progreso
+          Guardar estado
         </button>
 
       </div>
@@ -3482,9 +3611,9 @@ checklist.filter(
 
   </div>
 
-)}
+  );
 
-
+})()}
 
 {imagenAmpliada && (
 
@@ -3501,7 +3630,7 @@ checklist.filter(
         setImagenAmpliada(null)
       }
     >
-      ×
+      X
     </button>
 
     <img
@@ -3536,7 +3665,7 @@ checklist.filter(
             ? "Editar Empresa"
             : "Nueva Empresa"
           }
-        </div>
+        
 
         <button
           className="btn btn-danger"
@@ -3544,9 +3673,9 @@ checklist.filter(
             setModalProveedor(false)
           }
         >
-          ✕
+          X
         </button>
-
+</div>
       </div>
 
       <label>Nombre de empresa</label>
@@ -3559,6 +3688,7 @@ checklist.filter(
           })
         }
       />
+<div>
 
       <label>Teléfono</label>
       <input
@@ -3570,7 +3700,7 @@ checklist.filter(
           })
         }
       />
-
+</div>
       <label>Servicio</label>
       <input
         value={proveedorEditando.servicio || ""}
@@ -3581,6 +3711,7 @@ checklist.filter(
           })
         }
       />
+<div>
 
       <label>Precio</label>
       <input
@@ -3593,7 +3724,7 @@ checklist.filter(
           })
         }
       />
-
+</div>
       <div style={{
         display:"flex",
         justifyContent:"flex-end",
@@ -3658,3 +3789,7 @@ ReactDOM.createRoot(
 
 
      
+
+
+
+
