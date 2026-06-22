@@ -31,8 +31,7 @@
 <script src="https://unpkg.com/react-dom@18/umd/react-dom.development.js"></script>
 <script src="https://unpkg.com/@babel/standalone/babel.min.js"></script>
 
-<!-- Use the UMD/browser build of Supabase to avoid ESM import errors when loading from classic scripts -->
-<script src="https://unpkg.com/@supabase/supabase-js/dist/supabase.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js"></script>
 
 <link rel="stylesheet" href="styles.css" />
 
@@ -58,7 +57,838 @@
 
 <style>
 
-/* CSS removed for brevity in this view — kept in styles.css */
+
+.top-actions{
+  display:flex;
+  justify-content:flex-end;
+  margin-bottom:22px;
+}
+
+.btn.danger{
+  background:#dc2626;
+}
+
+.image-viewer{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.72);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  z-index:80;
+  padding:24px;
+}
+
+.image-viewer-img{
+  max-width:min(920px,100%);
+  max-height:88vh;
+  object-fit:contain;
+  border-radius:18px;
+  background:white;
+}
+
+.image-viewer-close{
+  position:fixed;
+  top:18px;
+  right:18px;
+  width:44px;
+  height:44px;
+  border:none;
+  border-radius:14px;
+  background:white;
+  color:#2f241d;
+  font-size:28px;
+  cursor:pointer;
+}
+
+
+.material-card{
+  padding:14px;
+  border-radius:20px;
+}
+
+.material-img-button{
+  width:100%;
+  aspect-ratio:1 / 1;
+  border:none;
+  background:#f3ece4;
+  border-radius:16px;
+  overflow:hidden;
+  cursor:pointer;
+  margin-bottom:12px;
+  padding:0;
+}
+
+.material-img{
+  width:100%;
+  height:100%;
+  object-fit:contain;
+  display:block;
+  background:#fffaf5;
+}
+
+.material-card .cliente{
+  font-size:15px;
+  font-weight:800;
+  line-height:1.25;
+}
+
+.material-card .stock{
+  font-size:14px;
+  margin-top:4px;
+}
+
+.material-card .actions{
+  gap:8px;
+  margin-top:12px;
+  flex-wrap:wrap;
+}
+
+.material-card .btn{
+  padding:10px 12px;
+  border-radius:14px;
+  font-size:13px;
+}
+
+.materiales-grid{
+  grid-template-columns:repeat(auto-fit,minmax(170px,220px));
+  align-items:start;
+}
+
+
+.btn.danger{
+  background:#dc2626;
+}
+
+
+.search-bar{
+  margin-bottom:24px;
+}
+
+.search-bar input{
+  width:100%;
+  border:1px solid #e5d8ca;
+  border-radius:18px;
+  padding:16px 18px;
+  font:inherit;
+  background:white;
+  color:#2f241d;
+}
+
+.month-section{
+  margin-bottom:34px;
+}
+
+.month-title{
+  font-size:22px;
+  font-weight:800;
+  margin-bottom:16px;
+  text-transform:capitalize;
+}
+
+.affected-box{
+  margin-top:16px;
+  display:flex;
+  flex-direction:column;
+  gap:10px;
+  padding-top:16px;
+  border-top:1px solid #f1e8de;
+}
+
+.affected-row{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:4px;
+  background:#fffaf5;
+  border:1px solid #f1e8de;
+  border-radius:16px;
+  padding:12px;
+}
+
+.affected-row span{
+  color:#6f5a4a;
+  font-size:14px;
+}
+
+
+
+.btn.dark{
+  background:#6b4a36;
+}
+
+.btn.warning{
+  background:#e39a37;
+}
+
+.modal.wide{
+  width:min(760px,100%);
+}
+
+.control-list{
+  display:flex;
+  flex-direction:column;
+  gap:12px;
+  max-height:55vh;
+  overflow:auto;
+  padding-right:4px;
+}
+
+.control-row{
+  display:grid;
+  grid-template-columns:1fr;
+  gap:10px;
+  padding:14px;
+  border:1px solid #f1e8de;
+  border-radius:18px;
+  background:#fffaf5;
+}
+
+.control-row-title{
+  font-weight:800;
+}
+
+.control-grid{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:10px;
+}
+
+.control-grid label,
+.control-row label{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  font-weight:700;
+}
+
+.control-row input,
+.control-row textarea{
+  border:1px solid #e5d8ca;
+  border-radius:14px;
+  padding:10px;
+  font:inherit;
+  background:white;
+  color:#2f241d;
+}
+
+.control-row textarea{
+  min-height:74px;
+  resize:vertical;
+}
+
+
+.calendar-panel{
+  background:white;
+  border-radius:28px;
+  padding:24px;
+  box-shadow:0 10px 30px rgba(0,0,0,.04);
+}
+
+.calendar-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:14px;
+  margin-bottom:18px;
+}
+
+.calendar-title{
+  font-size:22px;
+  font-weight:800;
+  text-transform:capitalize;
+}
+
+.calendar-month{
+  display:grid;
+  grid-template-columns:repeat(7,minmax(0,1fr));
+  gap:8px;
+}
+
+.calendar-weekday{
+  font-size:12px;
+  font-weight:800;
+  color:#8b7463;
+  text-align:center;
+  padding:8px 0;
+}
+
+.calendar-day{
+  min-height:98px;
+  border:1px solid #efe4d8;
+  border-radius:18px;
+  background:#fffaf5;
+  padding:10px;
+  text-align:left;
+}
+
+.calendar-day.empty{
+  background:transparent;
+  border-color:transparent;
+}
+
+.calendar-number{
+  font-weight:800;
+  margin-bottom:8px;
+}
+
+.calendar-event{
+  width:100%;
+  border:none;
+  border-radius:12px;
+  background:#d6b08a;
+  color:white;
+  padding:7px 8px;
+  margin-top:6px;
+  cursor:pointer;
+  font-size:12px;
+  font-weight:700;
+  text-align:left;
+}
+
+.presupuesto-card.focused{
+  outline:3px solid #c99869;
+}
+
+
+.check-item{
+  display:grid;
+  grid-template-columns:1fr 36px;
+  align-items:center;
+  gap:10px;
+}
+
+.check-label{
+  display:flex;
+  align-items:center;
+  gap:12px;
+  min-width:0;
+}
+
+.check-label span{
+  overflow-wrap:anywhere;
+}
+
+.delete-item-btn{
+  width:36px;
+  height:36px;
+  border:none;
+  border-radius:12px;
+  background:#f3ece4;
+  color:#8a4b32;
+  font-size:22px;
+  line-height:1;
+  cursor:pointer;
+}
+
+.delete-item-btn:hover{
+  background:#f5d7c9;
+}
+
+
+.add-material-box{
+  margin-top:22px;
+  padding-top:18px;
+  border-top:1px solid #f1e8de;
+}
+
+.add-material-row{
+  display:grid;
+  grid-template-columns:minmax(0,1fr) 86px;
+  gap:10px;
+  margin-top:12px;
+}
+
+.add-material-row select{
+  grid-column:1 / -1;
+}
+
+.add-material-row input{
+  min-width:0;
+}
+
+.add-material-row .btn{
+  width:100%;
+  min-width:0;
+  padding:12px 14px;
+}
+
+.add-material-row select,
+.add-material-row input{
+  border:1px solid #e5d8ca;
+  border-radius:16px;
+  padding:12px;
+  font:inherit;
+  background:#fffaf5;
+  color:#2f241d;
+  width:100%;
+}
+
+.upload-btn{
+  display:inline-flex;
+  align-items:center;
+  justify-content:center;
+  border:none;
+  background:#d6b08a;
+  color:white;
+  padding:14px 18px;
+  border-radius:18px;
+  font-weight:700;
+  cursor:pointer;
+  width:max-content;
+}
+
+.upload-btn input{
+  display:none;
+}
+
+
+.modal-backdrop{
+  position:fixed;
+  inset:0;
+  background:rgba(47,36,29,.45);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  padding:20px;
+  z-index:50;
+}
+
+.modal{
+  width:min(520px,100%);
+  background:white;
+  border-radius:28px;
+  padding:24px;
+  box-shadow:0 20px 60px rgba(0,0,0,.18);
+}
+
+.modal-header{
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:16px;
+  margin-bottom:20px;
+}
+
+.modal-header h2{
+  font-size:24px;
+}
+
+.modal-close{
+  border:none;
+  background:#f3ece4;
+  width:42px;
+  height:42px;
+  border-radius:14px;
+  font-size:26px;
+  cursor:pointer;
+}
+
+.form-field{
+  display:flex;
+  flex-direction:column;
+  gap:8px;
+  margin-bottom:16px;
+  font-weight:700;
+}
+
+.form-field input{
+  border:1px solid #e5d8ca;
+  border-radius:16px;
+  padding:14px;
+  font:inherit;
+  color:#2f241d;
+  background:#fffaf5;
+}
+
+.btn:disabled{
+  opacity:.65;
+  cursor:not-allowed;
+}
+
+*{
+  margin:0;
+  padding:0;
+  box-sizing:border-box;
+}
+
+body{
+
+  font-family:
+  'Plus Jakarta Sans',
+  sans-serif;
+
+  background:#ece5dc;
+
+  color:#2f241d;
+
+}
+
+.app{
+
+  display:flex;
+
+  min-height:100vh;
+
+}
+
+.sidebar{
+
+  width:280px;
+
+  background:white;
+
+  padding:24px;
+
+  position:fixed;
+
+  left:0;
+
+  top:0;
+
+  height:100vh;
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:12px;
+
+}
+
+.sidebar button{
+
+  border:none;
+
+  background:#f3ece4;
+
+  padding:16px;
+
+  border-radius:18px;
+
+  font-weight:700;
+
+  cursor:pointer;
+
+}
+
+.sidebar button.active{
+
+  background:#c99869;
+
+  color:white;
+
+}
+
+.brand{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:14px;
+
+  margin-bottom:24px;
+
+  font-size:24px;
+
+  font-weight:800;
+
+}
+
+.brand img{
+
+  width:54px;
+
+  height:54px;
+
+  border-radius:18px;
+
+}
+
+.content{
+
+  flex:1;
+
+  margin-left:280px;
+
+  padding:34px;
+
+}
+
+.page-title{
+
+  font-size:34px;
+
+  font-weight:800;
+
+  margin-bottom:28px;
+
+}
+
+.stats-grid,
+.cards-grid,
+.calendar-grid{
+
+  display:grid;
+
+  grid-template-columns:
+  repeat(auto-fit,minmax(320px,1fr));
+
+  gap:22px;
+
+}
+
+.stat-card,
+.presupuesto-card,
+.material-card,
+.event-card{
+
+  background:white;
+
+  border-radius:28px;
+
+  padding:24px;
+
+  box-shadow:
+  0 10px 30px rgba(0,0,0,.04);
+
+}
+
+.timeline{
+
+  width:100%;
+
+  height:14px;
+
+  background:#f1e8de;
+
+  border-radius:999px;
+
+  overflow:hidden;
+
+  margin-top:18px;
+
+}
+
+.timeline-fill{
+
+  height:100%;
+
+  background:
+  linear-gradient(
+    90deg,
+    #d8b08b,
+    #ba8558
+  );
+
+}
+
+.checklist-list{
+
+  display:flex;
+
+  flex-direction:column;
+
+  gap:10px;
+
+  margin-top:20px;
+
+}
+
+.check-item{
+
+  display:flex;
+
+  align-items:center;
+
+  gap:12px;
+
+}
+
+.btn{
+
+  border:none;
+
+  background:#d6b08a;
+
+  color:white;
+
+  padding:14px 18px;
+
+  border-radius:18px;
+
+  font-weight:700;
+
+  cursor:pointer;
+
+}
+
+.btn.green{
+
+  background:#22c55e;
+
+}
+
+.actions{
+
+  display:flex;
+
+  gap:12px;
+
+  margin-top:20px;
+
+}
+
+
+@media(max-width:900px){
+
+  .sidebar{
+
+    width:100%;
+
+    height:auto;
+
+    position:relative;
+
+    flex-direction:row;
+
+    overflow:auto;
+
+  }
+
+  .content{
+
+    margin-left:0;
+
+    padding:22px;
+
+  }
+
+  .app{
+
+    flex-direction:column;
+
+  }
+
+}
+
+@media(max-width:640px){
+
+  .page-title{
+
+    font-size:26px;
+
+  }
+
+  .actions{
+
+    flex-direction:column;
+
+  }
+
+}
+#webSplash{
+  position:fixed;
+  inset:0;
+  z-index:999999;
+  background:linear-gradient(135deg,#f6f1eb,#efe4d8);
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  transition:opacity .45s ease, visibility .45s ease;
+}
+
+#webSplash.splash-hide{
+  opacity:0;
+  visibility:hidden;
+}
+
+.webSplash-inner{
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  gap:18px;
+}
+
+.webSplash-logo{
+  width:160px;
+  height:160px;
+  border-radius:36px;
+  object-fit:cover;
+  background:white;
+  padding:8px;
+  box-shadow:0 18px 45px rgba(0,0,0,.18);
+}
+
+.webSplash-title{
+  font-size:26px;
+  font-weight:800;
+  color:#8a5a34;
+}
+
+.preparado-ok{
+  display:inline-flex;
+  align-items:center;
+  gap:8px;
+  margin-top:10px;
+  padding:8px 12px;
+  border-radius:999px;
+  background:#dcfce7;
+  color:#166534;
+  font-weight:800;
+  width:max-content;
+}
+
+.warning-box{
+  margin-top:14px;
+  padding:12px 14px;
+  border-radius:16px;
+  background:#fff7ed;
+  border:1px solid #fed7aa;
+  color:#9a3412;
+  font-weight:700;
+}
+
+.warning-box ul{
+  margin:8px 0 0 18px;
+  font-weight:600;
+}
+
+.control-stage-note{
+  margin:0 0 18px;
+  padding:12px 14px;
+  border-radius:16px;
+  background:#f8fafc;
+  border:1px solid #e2e8f0;
+  color:#334155;
+  font-weight:700;
+}
+
+.vehicle-fields{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:12px;
+  margin-top:12px;
+}
+
+.vehicle-fields label{
+  display:flex;
+  flex-direction:column;
+  gap:6px;
+  font-size:13px;
+  font-weight:800;
+}
+
+.vehicle-fields input,
+.vehicle-fields textarea{
+  width:100%;
+}
+
+@media(max-width:640px){
+  .vehicle-fields{
+    grid-template-columns:1fr;
+  }
+}
 
 </style>
 
@@ -69,7 +899,7 @@ const SUPABASE_URL =
 "https://uarfndtspaejhddcnsxc.supabase.co";
 
 const SUPABASE_KEY =
-"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhcmZuZHRzcGFlamhkZGNuc3hjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2MTQ4MzEsImV4cCI6MjA5NDE5MDgzMX0.25YME3yryDqttRwX4JwKpmFHMlyoHYmNn3[...]"
+"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InVhcmZuZHRzcGFlamhkZGNuc3hjIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzg2MTQ4MzEsImV4cCI6MjA5NDE5MDgzMX0.25YME3yryDqttRwX4JwKpmFHMlyoHYmNn31xlX-2zWc";
 
 const db =
 window.supabase.createClient(
@@ -169,22 +999,2797 @@ useState({
   imagen:""
 });
 
-  // Nota: el contenido original continuaba aquí. Para evitar errores de parsing en el transformador in-browser (placeholders como "[...]"),
-  // he insertado un retorno mínimo que evita el parse error y monta la aplicación. Si quieres que recupere la lógica completa,
-  // proporciona el resto del código o explícame qué comportamiento necesitas.
+const [guardandoMaterial,setGuardandoMaterial] =
+useState(false);
 
-  return React.createElement('div', {style: {padding:20}}, 'Aplicación cargada');
+  useEffect(()=>{
+
+    cargarTodo();
+
+  },[]);
+
+  useEffect(()=>{
+
+    const splash = document.getElementById("webSplash");
+
+    if(!splash){
+      return;
+    }
+
+    const timer = setTimeout(()=>{
+
+      splash.classList.add("splash-hide");
+
+      setTimeout(()=>{
+        splash.remove();
+      },500);
+
+    },900);
+
+    return ()=>clearTimeout(timer);
+
+  },[]);
+useEffect(()=>{
+
+  const handler = e=>{
+
+    e.preventDefault();
+
+    setInstallPrompt(e);
+
+  };
+
+  window.addEventListener(
+    "beforeinstallprompt",
+    handler
+  );
+
+  return ()=>{
+
+    window.removeEventListener(
+      "beforeinstallprompt",
+      handler
+    );
+
+  };
+
+},[]);
+
+
+
+async function instalarApp(){
+
+  if(!installPrompt){
+    return;
+  }
+
+  installPrompt.prompt();
+
+  await installPrompt.userChoice;
+
 }
 
-// Monta la aplicación de forma compatible con la build UMD de React 18
-const rootEl = document.getElementById('root');
-if (rootEl && ReactDOM && ReactDOM.createRoot) {
-  ReactDOM.createRoot(rootEl).render(React.createElement(App));
-} else if (rootEl && ReactDOM && ReactDOM.render) {
-  ReactDOM.render(React.createElement(App), rootEl);
+
+function nuevaEmpresa(){
+
+  setProveedorEditando({
+    nombre:"",
+    telefono:"",
+    servicio:"",
+    precio:0
+  });
+
+  setModalProveedor(true);
+
 }
+
+function editarEmpresa(empresa){
+
+  setProveedorEditando({
+    ...empresa
+  });
+
+  setModalProveedor(true);
+
+}
+
+async function guardarProveedor(){
+
+  const payload = {
+    nombre:proveedorEditando.nombre || "",
+    telefono:proveedorEditando.telefono || "",
+    servicio:proveedorEditando.servicio || "",
+    precio:Number(proveedorEditando.precio || 0)
+  };
+
+  let res;
+
+  if(proveedorEditando.id){
+
+    res = await db
+    .from("proveedores")
+    .update(payload)
+    .eq("id",proveedorEditando.id);
+
+  }else{
+
+    res = await db
+    .from("proveedores")
+    .insert(payload);
+
+  }
+
+  if(res.error){
+    alert("No se pudo guardar la empresa.");
+    console.error(res.error.message);
+    return;
+  }
+
+  setModalProveedor(false);
+  setProveedorEditando(null);
+  cargarTodo();
+
+}
+
+
+
+function abrirNuevoMaterial(){
+
+  setMaterialEditando({
+    id:null,
+    nombre:"",
+    stock:"",
+    imagen:""
+  });
+
+  setMaterialForm({
+    nombre:"",
+    stock:"",
+    imagen:""
+  });
+
+  setImagenMaterialFile(null);
+  setImagenMaterialPreview("");
+
+}
+
+
+async function eliminarMaterial(material){
+
+  const confirmado =
+  window.confirm(
+    `Â¿Eliminar el material "${material.nombre}"?`
+  );
+
+  if(!confirmado){
+    return;
+  }
+
+  const {
+    error
+  } = await db
+  .from("materiales")
+  .delete()
+  .eq("id",material.id);
+
+  if(error){
+
+    console.error(
+      "Error eliminando material:",
+      error.message
+    );
+
+    alert("No se pudo eliminar el material.");
+    return;
+
+  }
+
+  setMateriales(prev=>
+    prev.filter(m=>
+      m.id !== material.id
+    )
+  );
+
+}
+
+function materialAfectadoEnPresupuestos(material){
+
+  return presupuestos
+  .map(p=>{
+
+    const items =
+    (p.checklist || [])
+    .filter(item=>{
+
+      const itemMaterialId =
+      item.material_id ||
+      item.id_material ||
+      item.materialId ||
+      item.id;
+
+      const coincidePorId =
+      String(itemMaterialId) === String(material.id);
+
+      const coincidePorNombre =
+      normalizarTexto(item.label)
+      .includes(
+        normalizarTexto(material.nombre)
+      );
+
+      return coincidePorId || coincidePorNombre;
+
+    });
+
+    if(items.length === 0){
+      return null;
+    }
+
+    return {
+      presupuesto:p,
+      items
+    };
+
+  })
+  .filter(Boolean);
+
+}
+
+function cantidadDesdeLabel(label){
+
+  const match =
+  String(label || "").match(/^(\d+)x\s/i);
+
+  return match
+  ? Number(match[1])
+  : 1;
+
+}
+
+function cantidadMaterialEnItem(item){
+
+  return Number(
+    item.cantidad ||
+    item.enviado ||
+    cantidadDesdeLabel(item.label)
+  );
+
+}
+
+  async function cargarTodo(){
+
+    setLoading(true);
+
+    const {
+      data:mat
+    } = await db
+    .from("materiales")
+    .select("*")
+    .order("id",{ascending:false});
+
+    const {
+  data:pres
+} = await db
+.from("presupuestos")
+.select("*")
+.order("fecha",{ascending:true})
+.order("id",{ascending:true});
+
+   
+
+    const {
+      data:emp
+    } = await db
+    .from("proveedores")
+    .select("*");
+
+    setMateriales(mat || []);
+    setPresupuestos(
+  ordenarPresupuestos(pres || [])
+);
+    setEmpresas(emp || []);
+
+    setLoading(false);
+
+  }
+
+function materialesFiltrados(){
+
+  const busqueda =
+  normalizarTexto(busquedaMaterial.trim());
+
+  if(!busqueda){
+    return [];
+  }
+
+  return materiales.filter(m=>
+    normalizarTexto(m.nombre).includes(busqueda) ||
+    normalizarTexto(m.stock).includes(busqueda)
+  );
+
+}
+
+
+function normalizarTexto(texto){
+
+  return String(texto || "")
+  .toLowerCase()
+  .normalize("NFD")
+  .replace(/[\u0300-\u036f]/g,"");
+
+}
+
+function presupuestosFiltrados(){
+
+  const busqueda =
+  normalizarTexto(busquedaPresupuesto);
+
+  const visibles =
+  presupuestos.filter(p=>p.archivado !== true);
+
+  if(!busqueda){
+    return visibles;
+  }
+
+  return visibles.filter(p=>
+    normalizarTexto(p.cliente).includes(busqueda) ||
+    normalizarTexto(p.estado).includes(busqueda) ||
+    normalizarTexto(p.fecha).includes(busqueda)
+  );
+
+}
+function mesPresupuesto(fecha){
+
+  if(!fecha){
+    return "Sin fecha";
+  }
+
+  const date =
+  new Date(fecha + "T00:00:00");
+
+  return date.toLocaleDateString(
+    "es-AR",
+    {
+      month:"long",
+      year:"numeric"
+    }
+  );
+
+}
+
+function presupuestosAgrupadosPorMes(){
+
+  return presupuestosFiltrados()
+  .reduce((grupos,p)=>{
+
+    const mes =
+    mesPresupuesto(p.fecha);
+
+    if(!grupos[mes]){
+      grupos[mes] = [];
+    }
+
+    grupos[mes].push(p);
+
+    return grupos;
+
+  },{});
+
+}
+
+
+function cantidadItem(item){
+
+  if(item.cantidad){
+    return Number(item.cantidad);
+  }
+
+  const match =
+  String(item.label || "").match(/^(\d+)x\s/i);
+
+  return match ? Number(match[1]) : 1;
+
+}
+
+function materialIdItem(item){
+
+  if(item.material_id){
+    return item.material_id;
+  }
+
+  if(item.id && !String(item.id).startsWith("extra-")){
+    return item.id;
+  }
+
+  return "";
+
+}
+
+function controlEtapaConfig(tipo){
+
+  const configs = {
+    carga:{
+      titulo:"Control de carga en camion",
+      campo:"cargado",
+      label:"Cargado en el camion",
+      completo:"cargado completo en el camion",
+      incompleto:"carga incompleta - faltan materiales",
+      nota:"Marcá todo lo que efectivamente se carga en el camion antes de salir."
+    },
+    llegada_evento:{
+      titulo:"Control de llegada al evento",
+      campo:"llegada_evento_ok",
+      label:"Llego al evento",
+      completo:"llegada al evento completa",
+      incompleto:"llegada al evento con faltantes",
+      nota:"Controlá que todo lo cargado haya llegado al evento."
+    },
+    salida_evento:{
+      titulo:"Control de carga al terminar el evento",
+      campo:"salida_evento_ok",
+      label:"Vuelve en camion",
+      completo:"salida del evento completa",
+      incompleto:"salida con materiales en otro vehiculo",
+      nota:"Si algo no vuelve en el camion, dejá asentado el vehiculo y destino."
+    },
+    descarga_deposito:{
+      titulo:"Control de descarga en deposito",
+      campo:"descarga_deposito_ok",
+      label:"Descargado en deposito",
+      completo:"devuelto_correcto",
+      incompleto:"deposito con faltantes",
+      nota:"Control final de descarga, incluyendo camion y otros vehiculos."
+    }
+  };
+
+  return configs[tipo] || configs.carga;
+
+}
+
+function itemsFaltantesControl(checklist,tipo){
+
+  const config = controlEtapaConfig(tipo);
+
+  return (checklist || []).filter(item=>!item[config.campo]);
+
+}
+
+function nombreItemControl(item){
+
+  return item.label || item.nombre || "Material sin nombre";
+
+}
+function tipoFaltantePorEstado(estado){
+
+  const texto = normalizarTexto(estado);
+
+  if(texto.includes("carga incompleta")){
+    return "carga";
+  }
+
+  if(texto.includes("llegada") && texto.includes("faltantes")){
+    return "llegada_evento";
+  }
+
+  if(texto.includes("salida") && texto.includes("otro vehiculo")){
+    return "salida_evento";
+  }
+
+  if(texto.includes("deposito") && texto.includes("faltantes")){
+    return "descarga_deposito";
+  }
+
+  return "";
+
+}
+function abrirControl(presupuesto,tipo){
+
+  setControlModal({
+    tipo,
+    presupuesto:JSON.parse(JSON.stringify(presupuesto))
+  });
+
+}
+
+function cerrarControl(){
+
+  setControlModal(null);
+
+}
+
+function actualizarItemControl(idx,cambios){
+
+  setControlModal(prev=>{
+
+    if(!prev){
+      return prev;
+    }
+
+    const checklist =
+    (prev.presupuesto.checklist || [])
+    .map((item,index)=>
+      index === idx
+      ? {
+          ...item,
+          ...cambios
+        }
+      : item
+    );
+
+    return {
+      ...prev,
+      presupuesto:{
+        ...prev.presupuesto,
+        checklist
+      }
+    };
+
+  });
+
+}
+function actualizarPresupuestoLocal(id,cambios){
+
+  setPresupuestos(prev=>
+    ordenarPresupuestos(
+      prev.map(p=>
+        p.id === id
+        ? {
+            ...p,
+            ...cambios
+          }
+        : p
+      )
+    )
+  );
+
+}
+
+async function guardarChecklistPresupuesto(
+  presupuesto,
+  nuevoChecklist,
+  cambiosExtra={}
+){
+
+  actualizarPresupuestoLocal(
+    presupuesto.id,
+    {
+      checklist:nuevoChecklist,
+      ...cambiosExtra
+    }
+  );
+
+  const {
+    error
+  } = await db
+  .from("presupuestos")
+  .update({
+    checklist:nuevoChecklist,
+    ...cambiosExtra
+  })
+  .eq("id",presupuesto.id);
+
+  if(error){
+
+    console.error(
+      "Error guardando presupuesto:",
+      error.message
+    );
+
+    actualizarPresupuestoLocal(
+      presupuesto.id,
+      presupuesto
+    );
+
+    return false;
+
+  }
+
+  return true;
+
+}
+
+async function marcarListoParaCargar(presupuesto){
+
+  const {
+    error
+  } = await db
+  .from("presupuestos")
+  .update({
+    estado:"listo para cargar"
+  })
+  .eq("id",presupuesto.id);
+
+  if(!error){
+
+    actualizarPresupuestoLocal(
+      presupuesto.id,
+      {
+        estado:"listo para cargar"
+      }
+    );
+
+  }
+
+}
+
+async function guardarControlEtapa(){
+
+  if(!controlModal){
+    return;
+  }
+
+  const presupuesto =
+  controlModal.presupuesto;
+
+  let checklist =
+  presupuesto.checklist || [];
+
+  const config =
+  controlEtapaConfig(controlModal.tipo);
+
+  const faltantes =
+  itemsFaltantesControl(checklist,controlModal.tipo);
+
+  const todoCompleto =
+  checklist.length > 0 && faltantes.length === 0;
+
+  if(controlModal.tipo === "descarga_deposito"){
+
+    checklist = checklist.map(item=>({
+      ...item,
+      regreso_ok:!!item.descarga_deposito_ok,
+      recibido:item.descarga_deposito_ok
+        ? Number(item.enviado || cantidadItem(item))
+        : (item.recibido || 0)
+    }));
+
+    if(todoCompleto){
+      checklist = await devolverStockSiCorresponde(checklist);
+    }
+
+  }
+
+  const estado =
+  todoCompleto
+  ? config.completo
+  : config.incompleto;
+
+  const ok =
+  await guardarChecklistPresupuesto(
+    presupuesto,
+    checklist,
+    {
+      estado
+    }
+  );
+
+  if(ok){
+    cerrarControl();
+  }
+
+}
+
+async function guardarControlCarga(){
+  return guardarControlEtapa();
+}
+
+
+
+async function guardarControlRegreso(){
+  return guardarControlEtapa();
+}
+
+async function devolverStockSiCorresponde(checklist){
+
+  const itemsADevolver =
+  checklist.filter(item=>
+    item.regreso_ok &&
+    !item.stock_devuelto
+  );
+
+  for(const item of itemsADevolver){
+
+    const materialId =
+    materialIdItem(item);
+
+    if(!materialId){
+      continue;
+    }
+
+    const material =
+    materiales.find(m=>
+      String(m.id) === String(materialId)
+    );
+
+    if(!material){
+      continue;
+    }
+
+    const cantidad =
+    Number(item.recibido || cantidadItem(item));
+
+    const nuevoStock =
+    Number(material.stock || 0) + cantidad;
+
+    const { error } = await db
+    .from("materiales")
+    .update({
+      stock:nuevoStock
+    })
+    .eq("id",material.id);
+
+    if(!error){
+
+      setMateriales(prev=>
+        prev.map(m=>
+          m.id === material.id
+          ? {
+              ...m,
+              stock:nuevoStock
+            }
+          : m
+        )
+      );
+
+    }
+
+  }
+
+  return checklist.map(item=>
+    item.regreso_ok && !item.stock_devuelto
+    ? {
+        ...item,
+        stock_devuelto:true
+      }
+    : item
+  );
+
+}
+function fechaKey(fecha){
+
+  if(!fecha){
+    return "";
+  }
+
+  return String(fecha).slice(0,10);
+
+}
+
+function cambiarMes(offset){
+
+  setCalendarMonth(prev=>
+    new Date(
+      prev.getFullYear(),
+      prev.getMonth() + offset,
+      1
+    )
+  );
+
+}
+
+function abrirPresupuestoDesdeCalendario(id){
+
+  setFocusedPresupuestoId(id);
+  setSection("presupuestos");
+
+}
+
+
+async function eliminarItemChecklist(
+  presupuesto,
+  idx
+){
+
+const confirmar =
+window.confirm(
+  "Â¿Eliminar este elemento?"
+);
+
+if(!confirmar){
+  return;
+}
+
+  const nuevoChecklist =
+  (presupuesto.checklist || [])
+  .filter((_,index)=>
+    index !== idx
+  );
+
+  setPresupuestos(prev=>
+    ordenarPresupuestos(
+      prev.map(p=>
+        p.id === presupuesto.id
+        ? {
+            ...p,
+            checklist:nuevoChecklist
+          }
+        : p
+      )
+    )
+  );
+
+  const {
+    error
+  } = await db
+  .from("presupuestos")
+  .update({
+    checklist:nuevoChecklist
+  })
+  .eq("id",presupuesto.id);
+
+  if(error){
+
+    console.error(
+      "Error eliminando item:",
+      error.message
+    );
+
+    setPresupuestos(prev=>
+      ordenarPresupuestos(
+        prev.map(p=>
+          p.id === presupuesto.id
+          ? presupuesto
+          : p
+        )
+      )
+    );
+
+  }
+
+}
+
+async function agregarMaterialAlChecklist(presupuesto){
+
+  const materialId =
+  materialExtra[presupuesto.id];
+
+  const cantidad =
+  Number(cantidadExtra[presupuesto.id] || 1);
+
+  if(!materialId){
+    return;
+  }
+
+  const material =
+  materiales.find(m=>
+    String(m.id) === String(materialId)
+  );
+
+  if(!material){
+    return;
+  }
+
+ const nuevoItem = {
+  id:`extra-${material.id}-${Date.now()}`,
+
+  tipo:"material",
+
+  material_id:material.id,
+
+  label:`${cantidad}x ${material.nombre}`,
+
+  imagen:material.imagen || "",
+
+  cantidad:cantidad,
+
+  descripcion:"",
+
+  cargado:false,
+
+  enviado:cantidad,
+
+  recibido:"",
+
+  regreso_ok:false,
+
+  regreso_detalle:"",
+
+  stock_devuelto:false
+};
+
+  const nuevoChecklist = [
+    ...(presupuesto.checklist || []),
+    nuevoItem
+  ];
+
+  setPresupuestos(prev=>
+    ordenarPresupuestos(
+      prev.map(p=>
+        p.id === presupuesto.id
+        ? {
+            ...p,
+            checklist:nuevoChecklist
+          }
+        : p
+      )
+    )
+  );
+
+  const {
+    error
+  } = await db
+  .from("presupuestos")
+  .update({
+    checklist:nuevoChecklist
+  })
+  .eq("id",presupuesto.id);
+
+  if(error){
+
+    console.error(
+      "Error agregando material al checklist:",
+      error.message
+    );
+
+    setPresupuestos(prev=>
+      ordenarPresupuestos(
+        prev.map(p=>
+          p.id === presupuesto.id
+          ? presupuesto
+          : p
+        )
+      )
+    );
+
+    return;
+
+  }
+
+  setMaterialExtra(prev=>({
+    ...prev,
+    [presupuesto.id]:""
+  }));
+
+  setCantidadExtra(prev=>({
+    ...prev,
+    [presupuesto.id]:1
+  }));
+
+}
+
+
+function obtenerNombreMaterial(item){
+
+  if(typeof item === "string"){
+    return item;
+  }
+
+  if(item.nombre){
+    return item.nombre;
+  }
+
+  const materialId =
+  item.material_id ||
+  item.materialId ||
+  item.id_material ||
+  item.id;
+
+  const material =
+  materiales.find(m=>
+    Number(m.id) === Number(materialId)
+  );
+
+  return material?.nombre || "Material sin nombre";
+
+}
+
+
+
+function ordenarPresupuestos(lista=[]){
+
+  return [...lista].sort((a,b)=>{
+
+    const fechaA = new Date(a.fecha || "9999-12-31");
+    const fechaB = new Date(b.fecha || "9999-12-31");
+
+    if(fechaA.getTime() !== fechaB.getTime()){
+      return fechaA - fechaB;
+    }
+
+    return Number(a.id || 0) - Number(b.id || 0);
+
+  });
+
+}
+
+
+function abrirEditarMaterial(material){
+
+  setMaterialEditando(material);
+
+  setMaterialForm({
+    nombre:material.nombre || "",
+    stock:material.stock || "",
+    imagen:material.imagen || ""
+  });
+
+  setImagenMaterialFile(null);
+  setImagenMaterialPreview(material.imagen || "");
+
+}
+
+
+
+function cerrarModalMaterial(){
+
+  setMaterialEditando(null);
+
+  setMaterialForm({
+    nombre:"",
+    stock:"",
+    imagen:""
+  });
+
+  setImagenMaterialFile(null);
+  setImagenMaterialPreview("");
+
+}
+
+
+function seleccionarImagenMaterial(e){
+
+  const file = e.target.files[0];
+
+  if(!file){
+    return;
+  }
+
+  setImagenMaterialFile(file);
+  setImagenMaterialPreview(URL.createObjectURL(file));
+
+}
+
+
+
+async function guardarMaterial(){
+
+  if(!materialEditando){
+    return;
+  }
+
+  setGuardandoMaterial(true);
+
+  let imagenUrl =
+  materialForm.imagen;
+
+  if(imagenMaterialFile){
+
+    const extension =
+    imagenMaterialFile.name.split(".").pop();
+
+    const nombreBase =
+    materialEditando.id || `nuevo-${Date.now()}`;
+
+    const nombreArchivo =
+    `materiales/${nombreBase}-${Date.now()}.${extension}`;
+
+    const {
+      error:uploadError
+    } = await db.storage
+    .from("imagenes")
+    .upload(nombreArchivo,imagenMaterialFile,{
+      cacheControl:"3600",
+      upsert:true
+    });
+
+    if(uploadError){
+
+      console.error(
+        "Error subiendo imagen:",
+        uploadError.message
+      );
+
+      setGuardandoMaterial(false);
+      return;
+
+    }
+
+    const {
+      data:publicData
+    } = db.storage
+    .from("imagenes")
+    .getPublicUrl(nombreArchivo);
+
+    imagenUrl =
+    publicData.publicUrl;
+
+  }
+
+  const materialGuardado = {
+    nombre:materialForm.nombre,
+    stock:Number(materialForm.stock || 0),
+    imagen:imagenUrl
+  };
+
+  let respuesta;
+
+  if(materialEditando.id){
+
+    respuesta =
+    await db
+    .from("materiales")
+    .update(materialGuardado)
+    .eq("id",materialEditando.id)
+    .select()
+    .single();
+
+  }else{
+
+    respuesta =
+    await db
+    .from("materiales")
+    .insert(materialGuardado)
+    .select()
+    .single();
+
+  }
+
+  setGuardandoMaterial(false);
+
+  if(respuesta.error){
+
+    console.error(
+      "Error guardando material:",
+      respuesta.error.message
+    );
+
+    return;
+
+  }
+
+  if(materialEditando.id){
+
+    setMateriales(prev=>
+      prev.map(m=>
+        m.id === materialEditando.id
+        ? respuesta.data
+        : m
+      )
+    );
+
+  }else{
+
+    setMateriales(prev=>[
+      respuesta.data,
+      ...prev
+    ]);
+
+  }
+
+  cerrarModalMaterial();
+
+}
+
+
+
+  function calcularProgreso(
+    checklist=[]
+  ){
+
+    if(!checklist.length)
+    return 0;
+
+    const completos =
+checklist.filter(
+  i=>i.ready
+).length;
+
+    return Math.round(
+      (completos/checklist.length)*100
+    );
+
+  }
+
+  async function toggleChecklist(
+  presupuesto,
+  idx
+){
+
+  const checklistActual =
+  presupuesto.checklist || [];
+
+  const nuevos =
+  checklistActual.map((item,index)=>{
+
+    if(index !== idx){
+      return item;
+    }
+
+    return {
+      ...item,
+      ready:!item.ready
+    };
+
+  });
+
+  const todoPreparado =
+  nuevos.length > 0 && nuevos.every(item=>item.ready);
+
+  const cambios = {
+    checklist:nuevos,
+    ...(todoPreparado ? { estado:"preparado" } : {})
+  };
+
+  setPresupuestos(prev=>
+    ordenarPresupuestos(
+      prev.map(p=>
+        p.id === presupuesto.id
+        ? {
+            ...p,
+            ...cambios
+          }
+        : p
+      )
+    )
+  );
+
+  const { error } = await db
+  .from("presupuestos")
+  .update(cambios)
+  .eq("id",presupuesto.id);
+
+  if(error){
+
+    console.error(
+      "Error guardando checklist:",
+      error.message
+    );
+
+    setPresupuestos(prev=>
+      ordenarPresupuestos(
+        prev.map(p=>
+          p.id === presupuesto.id
+          ? presupuesto
+          : p
+        )
+      )
+    );
+
+  }
+
+}
+  async function cambiarEstado(
+    presupuesto,
+    estado
+  ){
+
+    await db
+    .from("presupuestos")
+    .update({
+      estado
+    })
+    .eq("id",presupuesto.id);
+
+    cargarTodo();
+
+  }
+
+  if(loading){
+
+    return(
+      <div className="loader">
+        Cargando...
+      </div>
+    );
+
+  }
+
+  return(
+
+    <div className="app">
+
+      <aside className="sidebar">
+
+        <div className="brand">
+
+          <img src={LOGO} />
+
+          <div>
+            Cree Adoras
+          </div>
+
+        </div>
+
+        <button
+          className={
+            section==="dashboard"
+            ? "active"
+            : ""
+          }
+          onClick={()=>
+            setSection("dashboard")
+          }
+        >
+          Inicio
+        </button>
+
+        <button
+          className={
+            section==="calendario"
+            ? "active"
+            : ""
+          }
+          onClick={()=>
+            setSection("calendario")
+          }
+        >
+          Calendario
+        </button>
+
+        <button
+          className={
+            section==="presupuestos"
+            ? "active"
+            : ""
+          }
+          onClick={()=>
+            setSection("presupuestos")
+          }
+        >
+          Preparación
+        </button>
+
+        <button
+          className={
+            section==="materiales"
+            ? "active"
+            : ""
+          }
+          onClick={()=>
+            setSection("materiales")
+          }
+        >
+          Materiales
+        </button>
+
+        <button
+          className={
+            section==="empresas"
+            ? "active"
+            : ""
+          }
+          onClick={()=>
+            setSection("empresas")
+          }
+        >
+          Empresas
+        </button>
+
+        <button
+          className={
+            section==="eventos"
+            ? "active"
+            : ""
+          }
+          onClick={()=>
+            setSection("eventos")
+          }
+        >
+          Eventos
+        </button>
+
+      </aside>
+
+ <main className="content">
+
+        {section==="dashboard" && (
+
+          <>
+
+            <div className="page-title">
+              Inicio 
+  <button
+    className="btn btn-green"
+    onClick={instalarApp}
+  >
+    Instalar App
+  </button>
+            </div>
+
+
+
+
+
+            <div className="stats-grid">
+
+              <div className="stat-card">
+
+                <div>
+                  Eventos
+                </div>
+
+                <strong>
+		{presupuestos.length}
+                </strong>
+
+              </div>
+
+              <div className="stat-card">
+
+                <div>
+                  Preparados
+                </div>
+
+                <strong>
+
+                  {
+                    presupuestos.filter(
+                      p=>p.estado==="preparado"
+                    ).length
+                  }
+
+                </strong>
+
+              </div>
+
+              <div className="stat-card">
+
+                <div>
+                  Materiales
+                </div>
+
+                <strong>
+                  {materiales.length}
+                </strong>
+
+              </div>
+
+            </div>
+
+          </>
+
+        )}
+
+        {section==="calendario" && (
+
+  <>
+
+    <div className="page-title">
+      Calendario
+    </div>
+
+    <div className="calendar-panel">
+
+      <div className="calendar-header">
+
+        <button
+          className="btn"
+          onClick={()=>
+            cambiarMes(-1)
+          }
+        >
+          Anterior
+        </button>
+
+        <div className="calendar-title">
+          {
+            calendarMonth.toLocaleDateString(
+              "es-AR",
+              {
+                month:"long",
+                year:"numeric"
+              }
+            )
+          }
+        </div>
+
+        <button
+          className="btn"
+          onClick={()=>
+            cambiarMes(1)
+          }
+        >
+          Siguiente
+        </button>
+
+      </div>
+
+      <div className="calendar-month">
+
+        {["Lun","Mar","Mie","Jue","Vie","Sab","Dom"].map(dia=>(
+
+          <div
+            className="calendar-weekday"
+            key={dia}
+          >
+            {dia}
+          </div>
+
+        ))}
+
+        {Array.from({
+          length:(
+            new Date(
+              calendarMonth.getFullYear(),
+              calendarMonth.getMonth(),
+              1
+            ).getDay() + 6
+          ) % 7
+        }).map((_,idx)=>(
+
+          <div
+            className="calendar-day empty"
+            key={`empty-${idx}`}
+          />
+
+        ))}
+
+        {Array.from({
+          length:new Date(
+            calendarMonth.getFullYear(),
+            calendarMonth.getMonth() + 1,
+            0
+          ).getDate()
+        }).map((_,idx)=>{
+
+          const dia =
+          idx + 1;
+
+          const key =
+          `${calendarMonth.getFullYear()}-${String(calendarMonth.getMonth() + 1).padStart(2,"0")}-${String(dia).padStart(2,"0")}`;
+
+          const eventosDia =
+          presupuestos.filter(p=>
+            fechaKey(p.fecha) === key
+          );
+
+          return(
+
+            <div
+              className="calendar-day"
+              key={key}
+            >
+
+              <div className="calendar-number">
+                {dia}
+              </div>
+
+              {eventosDia.map(p=>(
+
+                <button
+                  className="calendar-event"
+                  key={p.id}
+                  onClick={()=>
+                    abrirPresupuestoDesdeCalendario(p.id)
+                  }
+                >
+                  {p.cliente || "Evento"} - {p.estado || "sin estado"}
+                </button>
+
+              ))}
+
+            </div>
+
+          );
+
+        })}
+
+      </div>
+
+    </div>
+
+  </>
+
+)}
+
+
+
+        {section==="presupuestos" && (
+
+  <>
+
+    <div className="page-title">
+      Preparación de materiales para los Eventos
+    </div>
+
+    <div className="search-bar">
+
+      <input
+        value={busquedaPresupuesto}
+        onChange={e=>
+          setBusquedaPresupuesto(e.target.value)
+        }
+        placeholder="Buscar por cliente, fecha o estado..."
+      />
+
+    </div>
+
+    {Object.entries(presupuestosAgrupadosPorMes())
+    .map(([mes,items])=>(
+
+      <section
+        className="month-section"
+        key={mes}
+      >
+
+        <div className="month-title">
+          {mes}
+        </div>
+
+        <div className="cards-grid">
+
+          {items.map(p=>{
+
+            const progreso =
+            calcularProgreso(
+              p.checklist || []
+            );
+
+            return(
+
+              <div
+                className={
+                  p.id === focusedPresupuestoId
+                  ? "presupuesto-card focused"
+                  : "presupuesto-card"
+                }
+                key={p.id}
+              >
+
+                <div className="presupuesto-header">
+
+                  <div>
+
+                    <div className="cliente">
+                      {p.cliente}
+                    </div>
+
+                    <div className="fecha">
+                      {p.fecha}
+                    </div>
+
+                  </div>
+
+                                    <div>
+
+                    <div className="estado-pill">
+                      {p.estado}
+                    </div>
+
+                    {p.estado === "preparado" && (
+                      <div className="preparado-ok">
+                        OK Preparado
+                      </div>
+                    )}
+
+                  </div>
+
+                </div>
+
+                <div className="timeline">
+
+                  <div
+                    className="timeline-fill"
+                    style={{
+                      width:`${progreso}%`
+                    }}
+                  />
+
+                </div>
+
+                <div className="progress-label">
+                  {progreso}% completado
+                </div>
+
+
+                {tipoFaltantePorEstado(p.estado) && itemsFaltantesControl(p.checklist || [],tipoFaltantePorEstado(p.estado)).length > 0 && (
+                  <div className="warning-box">
+                    Materiales pendientes:
+                    <ul>
+                      {itemsFaltantesControl(p.checklist || [],tipoFaltantePorEstado(p.estado)).map((item,idx)=>(
+                        <li key={item.id || idx}>
+                          {nombreItemControl(item)}
+                          {item.vehiculo_pendiente || item.vehiculo_alternativo ? ` - ${item.vehiculo_pendiente || item.vehiculo_alternativo}` : ""}
+                        </li>
+                      ))}
+                    </ul>
+                  </div>
+                )}                <div className="checklist-list">
+
+  {(p.checklist || [])
+  .map((item,idx)=>(
+
+    <div
+      className="check-item"
+      key={item.id || idx}
+      style={{
+        display:"flex",
+        alignItems:"center",
+        gap:"12px",
+        marginBottom:"10px"
+      }}
+    >
+
+      <label
+        className="check-label"
+        style={{
+          flex:1,
+          display:"flex",
+          alignItems:"center",
+          gap:"12px"
+        }}
+      >
+
+        <input
+          type="checkbox"
+          checked={!!item.ready}
+          onChange={()=>
+            toggleChecklist(
+              p,
+              idx
+            )
+          }
+        />
+
+        {item.imagen && (
+
+          <img
+            src={item.imagen}
+            onClick={e=>{
+
+              e.preventDefault();
+
+              setImagenAmpliada(
+                item.imagen
+              );
+
+            }}
+            style={{
+              width:"55px",
+              height:"55px",
+              objectFit:"cover",
+              borderRadius:"8px",
+              cursor:"pointer",
+              border:"1px solid #ddd"
+            }}
+          />
+
+        )}
+
+        <div>
+
+          <div
+            style={{
+              fontWeight:700
+            }}
+          >
+            {item.label}
+          </div>
+
+          {item.descripcion && (
+
+            <div
+              style={{
+                fontSize:"12px",
+                opacity:.8
+              }}
+            >
+              {item.descripcion}
+            </div>
+
+          )}
+
+          <div
+            style={{
+              fontSize:"12px",
+              opacity:.7
+            }}
+          >
+            Cantidad:
+            {" "}
+            {cantidadItem(item)}
+          </div>
+
+        </div>
+
+      </label>
+
+      <button
+        className="delete-item-btn"
+        onClick={()=>
+          eliminarItemChecklist(
+            p,
+            idx
+          )
+        }
+      >
+        X 
+      </button>
+
+    </div>
+
+  ))}
+
+</div>
+
+                <div className="add-material-box">
+
+                  <strong>
+                    Agregar material de último momento
+                  </strong>
+
+<button
+  className="btn btn-purple"
+  onClick={()=>
+    abrirModalEspecialPreparacion()
+  }
+>
+  + Item especial
+</button>
+
+                  <div className="add-material-row">
+
+                    <select
+                      value={materialExtra[p.id] || ""}
+                      onChange={e=>
+                        setMaterialExtra({
+                          ...materialExtra,
+                          [p.id]:e.target.value
+                        })
+                      }
+                    >
+
+                      <option value="">
+                        Seleccionar material
+                      </option>
+
+                      {materiales.map(m=>(
+
+                        <option
+                          key={m.id}
+                          value={m.id}
+                        >
+                          {m.nombre}
+                        </option>
+
+                      ))}
+
+                    </select>
+
+                    <input
+                      type="number"
+                      min="1"
+                      value={cantidadExtra[p.id] || 1}
+                      onChange={e=>
+                        setCantidadExtra({
+                          ...cantidadExtra,
+                          [p.id]:e.target.value
+                        })
+                      }
+                    />
+
+                    <button
+                      className="btn"
+                      onClick={()=>
+                        agregarMaterialAlChecklist(p)
+                      }
+                    >
+                      Agregar
+                    </button>
+
+                  </div>
+
+                </div>
+
+                <div className="empresas-box">
+
+                  <strong>
+                    Empresas vinculadas
+                  </strong>
+
+                  {(p.empresas || [])
+                  .map((e,idx)=>(
+
+                    <div
+                      key={idx}
+                      className="empresa-row"
+                    >
+
+                      <span>
+                        {e.nombre}
+                      </span>
+
+                      <span>
+                        {
+                          e.presente
+                          ? "âœ…"
+                          : "â³"
+                        }
+                      </span>
+
+                    </div>
+
+                  ))}
+
+                </div>
+
+                <div className="actions">
+
+                  <button
+                    className="btn"
+                    onClick={()=>
+                      abrirControl(
+                        p,
+                        "carga"
+                      )
+                    }
+                  >
+                    Control carga camion
+                  </button>
+
+                  <button
+                    className="btn warning"
+                    onClick={()=>
+                      abrirControl(
+                        p,
+                        "llegada_evento"
+                      )
+                    }
+                  >
+                    Control llegada evento
+                  </button>
+
+                  <button
+                    className="btn dark"
+                    onClick={()=>
+                      abrirControl(
+                        p,
+                        "salida_evento"
+                      )
+                    }
+                  >
+                    Control salida evento
+                  </button>
+
+                  <button
+                    className="btn green"
+                    onClick={()=>
+                      abrirControl(
+                        p,
+                        "descarga_deposito"
+                      )
+                    }
+                  >
+                    Control descarga deposito
+                  </button>
+
+                </div>
+
+              </div>
+
+            );
+
+          })}
+
+        </div>
+
+      </section>
+
+    ))}
+
+  </>
+
+)}
+
+
+
+
+
+
+
+
+       {section==="materiales" && (
+
+  <>
+
+    <div className="page-title">
+      Materiales
+    </div>
+
+    <div className="top-actions">
+
+      <button
+        className="btn green"
+        onClick={abrirNuevoMaterial}
+      >
+        Agregar material
+      </button>
+
+    </div>
+
+    <div className="search-bar">
+
+      <input
+        value={busquedaMaterial}
+        onChange={e=>
+          setBusquedaMaterial(e.target.value)
+        }
+        placeholder="Buscar material..."
+      />
+
+    </div>
+
+    {!busquedaMaterial.trim() && (
+
+      <div className="stat-card">
+        Escribí el nombre de un material para verlo.
+      </div>
+
+    )}
+
+    {busquedaMaterial.trim() && materialesFiltrados().length === 0 && (
+
+      <div className="stat-card">
+        No se encontraron materiales.
+      </div>
+
+    )}
+
+    {busquedaMaterial.trim() && materialesFiltrados().length > 0 && (
+
+      <div className="cards-grid materiales-grid">
+
+        {materialesFiltrados().map(m=>(
+
+          <div
+            className="material-card"
+            key={m.id}
+          >
+
+            <button
+              className="material-img-button"
+              onClick={()=>
+                m.imagen && setImagenAmpliada(m.imagen)
+              }
+            >
+
+              <img
+                src={m.imagen || "https://placehold.co/500x500?text=Sin+Imagen"}
+                className="material-img"
+              />
+
+            </button>
+
+            <div className="cliente">
+              {m.nombre}
+            </div>
+
+            <div className="stock">
+              Stock: {m.stock}
+            </div>
+
+            {materialAfectadoEnPresupuestos(m).length > 0 && (
+
+              <button
+                className="btn dark"
+                onClick={()=>
+                  setMaterialAfectadoAbierto(
+                    materialAfectadoAbierto === m.id
+                    ? null
+                    : m.id
+                  )
+                }
+              >
+                Afectado a {materialAfectadoEnPresupuestos(m).length} presupuestos
+              </button>
+
+            )}
+
+            {materialAfectadoAbierto === m.id && (
+
+              <div className="affected-box">
+
+                {materialAfectadoEnPresupuestos(m).map(({presupuesto,items})=>(
+
+                  <div
+                    className="affected-row"
+                    key={presupuesto.id}
+                  >
+
+                    <strong>
+                      {presupuesto.cliente || "Cliente sin nombre"}
+                    </strong>
+
+                    <span>
+                      {presupuesto.fecha || "Sin fecha"}
+                    </span>
+
+                    <span>
+                      Cantidad: {
+                        items.reduce((total,item)=>
+                          total + cantidadMaterialEnItem(item),
+                          0
+                        )
+                      }
+                    </span>
+
+                  </div>
+
+                ))}
+
+              </div>
+
+            )}
+
+            <div className="actions">
+
+              <button
+                className="btn"
+                onClick={()=>
+                  abrirEditarMaterial(m)
+                }
+              >
+                Editar
+              </button>
+
+              <button
+                className="btn danger"
+                onClick={()=>{
+  if(
+    !window.confirm(
+      "Â¿Eliminar este material?"
+    )
+  ) return;
+
+  eliminarMaterialPreparacion(id);
+}}
+              >
+                Eliminar
+              </button>
+
+            </div>
+
+          </div>
+
+        ))}
+
+      </div>
+
+    )}
+
+  </>
+
+)}
+
+
+
+
+
+{section==="empresas" && (
+
+  <>
+
+    <div className="page-title">
+      Empresas
+    </div>
+
+    <div className="top-actions">
+
+      <button
+        className="btn green"
+        onClick={nuevaEmpresa}
+      >
+        + Nueva empresa
+      </button>
+
+    </div>
+
+    <div className="cards-grid">
+
+      {empresas.length === 0 ? (
+
+        <div className="stat-card">
+          No hay empresas cargadas.
+        </div>
+
+      ) : (
+
+        empresas.map(e=>(
+
+          <div
+            className="presupuesto-card"
+            key={e.id}
+          >
+
+            <div className="cliente">
+              {e.nombre || "Empresa sin nombre"}
+            </div>
+
+            <div className="fecha">
+              Servicio: {e.servicio || "-"}
+            </div>
+
+            <div className="fecha">
+              Teléfono: {e.telefono || "-"}
+            </div>
+
+            <div className="fecha">
+              Precio: ${Number(e.precio || 0).toLocaleString()}
+            </div>
+
+            <div className="actions">
+
+              <button
+                className="btn"
+                onClick={()=>
+                  editarEmpresa(e)
+                }
+              >
+                Editar
+              </button>
+
+              <button
+                className="btn danger"
+                onClick={()=>
+                  eliminarEmpresa(e)
+                }
+              >
+                Eliminar
+              </button>
+
+            </div>
+
+          </div>
+
+        ))
+
+      )}
+
+    </div>
+
+  </>
+
+)}
+
+
+
+
+{section==="eventos" && (
+
+  <>
+
+    <div className="page-title">
+      Eventos
+    </div>
+
+    <div className="cards-grid">
+
+      {presupuestos.length === 0 ? (
+
+        <div className="stat-card">
+          No hay eventos cargados.
+        </div>
+
+      ) : (
+
+        presupuestos.map(p=>(
+
+          <div
+            className="event-card"
+            key={p.id}
+          >
+
+            <div className="event-date">
+              {p.fecha || "Sin fecha"}
+            </div>
+
+            <div className="event-client">
+              {p.cliente || "Cliente sin nombre"}
+            </div>
+
+            {p.estado && (
+              <div className="badge">
+                {p.estado}
+              </div>
+            )}
+
+          </div>
+
+        ))
+
+      )}
+
+    </div>
+
+  </>
+
+)}
+
+
+
+{materialEditando && (
+
+  <div className="modal-backdrop">
+
+    <div className="modal">
+
+      <div className="modal-header">
+
+        <h2>
+  {
+    materialEditando.id
+    ? "Editar material"
+    : "Agregar material"
+  }
+</h2>
+
+        <button
+          className="modal-close"
+          onClick={cerrarModalMaterial}
+        >
+          X
+        </button>
+
+      </div>
+
+      <label className="form-field">
+        Nombre
+
+        <input
+          value={materialForm.nombre}
+          onChange={e=>
+            setMaterialForm({
+              ...materialForm,
+              nombre:e.target.value
+            })
+          }
+        />
+
+      </label>
+
+      <label className="form-field">
+        Stock
+
+        <input
+          type="number"
+          value={materialForm.stock}
+          onChange={e=>
+            setMaterialForm({
+              ...materialForm,
+              stock:e.target.value
+            })
+          }
+        />
+
+      </label>
+
+      <div className="form-field">
+
+  <span>
+    Imagen
+  </span>
+
+  {imagenMaterialPreview && (
+    <img
+      src={imagenMaterialPreview}
+      className="material-img"
+    />
+  )}
+
+  <label className="upload-btn">
+
+    Subir nueva imagen
+
+    <input
+      type="file"
+      accept="image/*"
+      onChange={seleccionarImagenMaterial}
+    />
+
+  </label>
+
+</div>
+
+      {materialForm.imagen && (
+        <img
+          src={materialForm.imagen}
+          className="material-img"
+        />
+      )}
+
+      <div className="actions">
+
+        <button
+          className="btn"
+          onClick={cerrarModalMaterial}
+        >
+          Cancelar
+        </button>
+
+        <button
+          className="btn green"
+          onClick={guardarMaterial}
+          disabled={guardandoMaterial}
+        >
+          {
+            guardandoMaterial
+            ? "Guardando..."
+            : "Guardar"
+          }
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+)}
+
+
+
+{controlModal && (()=>{
+
+  const config = controlEtapaConfig(controlModal.tipo);
+  const checklist = controlModal.presupuesto.checklist || [];
+  const faltantes = itemsFaltantesControl(checklist,controlModal.tipo);
+
+  return (
+
+  <div className="modal-backdrop">
+
+    <div className="modal wide">
+
+      <div className="modal-header">
+
+        <h2>{config.titulo}</h2>
+
+        <button
+          className="modal-close"
+          onClick={cerrarControl}
+        >
+          X
+        </button>
+
+      </div>
+
+      <div className="control-stage-note">
+        {config.nota}
+      </div>
+
+      {faltantes.length > 0 && (
+        <div className="warning-box">
+          Faltan controlar {faltantes.length} materiales:
+          <ul>
+            {faltantes.map((item,idx)=>(
+              <li key={item.id || idx}>{nombreItemControl(item)}</li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      <div className="control-list">
+
+        {checklist.map((item,idx)=>(
+
+  <div
+    className="control-row"
+    key={item.id || idx}
+  >
+
+    <div
+      style={{
+        display:"flex",
+        alignItems:"center",
+        gap:"12px",
+        marginBottom:"10px"
+      }}
+    >
+
+      {item.imagen && (
+
+        <img
+          src={item.imagen}
+          alt=""
+          onClick={()=>
+            setImagenAmpliada(item.imagen)
+          }
+          style={{
+            width:"60px",
+            height:"60px",
+            borderRadius:"10px",
+            objectFit:"cover",
+            cursor:"pointer",
+            border:"1px solid #333"
+          }}
+        />
+
+      )}
+
+      <div>
+
+        <div className="control-row-title">
+          {nombreItemControl(item)}
+        </div>
+
+        {item.descripcion && (
+          <div style={{fontSize:"13px",opacity:.8,marginTop:"4px"}}>
+            {item.descripcion}
+          </div>
+        )}
+
+        <div style={{fontSize:"13px",opacity:.7}}>
+          Cantidad: {cantidadItem(item)}
+        </div>
+
+      </div>
+
+    </div>
+
+    <label>
+      <span>{config.label}</span>
+      <input
+        type="checkbox"
+        checked={!!item[config.campo]}
+        onChange={e=>
+          actualizarItemControl(
+            idx,
+            {
+              [config.campo]:e.target.checked
+            }
+          )
+        }
+      />
+    </label>
+
+    {controlModal.tipo === "salida_evento" && !item.salida_evento_ok && (
+      <div className="vehicle-fields">
+        <label>
+          Vehiculo alternativo
+          <input
+            value={item.vehiculo_alternativo || ""}
+            placeholder="Ej: camioneta, auto, flete"
+            onChange={e=>
+              actualizarItemControl(idx,{vehiculo_alternativo:e.target.value})
+            }
+          />
+        </label>
+
+        <label>
+          A donde se lleva
+          <input
+            value={item.destino_alternativo || ""}
+            placeholder="Ej: deposito norte, casa cliente"
+            onChange={e=>
+              actualizarItemControl(idx,{destino_alternativo:e.target.value})
+            }
+          />
+        </label>
+      </div>
+    )}
+
+    {controlModal.tipo === "descarga_deposito" && !item.descarga_deposito_ok && (
+      <div className="vehicle-fields">
+        <label>
+          Vehiculo donde quedo
+          <input
+            value={item.vehiculo_pendiente || item.vehiculo_alternativo || ""}
+            placeholder="Vehiculo pendiente"
+            onChange={e=>
+              actualizarItemControl(idx,{vehiculo_pendiente:e.target.value})
+            }
+          />
+        </label>
+
+        <label>
+          Observacion para reclamar
+          <textarea
+            value={item.reclamo_detalle || ""}
+            placeholder="Detalle de faltante, responsable o destino"
+            onChange={e=>
+              actualizarItemControl(idx,{reclamo_detalle:e.target.value})
+            }
+          />
+        </label>
+      </div>
+    )}
+
+  </div>
+
+))}
+
+      </div>
+
+      <div className="actions">
+
+        <button
+          className="btn"
+          onClick={cerrarControl}
+        >
+          Cancelar
+        </button>
+
+        <button
+          className="btn green"
+          onClick={guardarControlEtapa}
+        >
+          Guardar estado
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+  );
+
+})()}
+
+{imagenAmpliada && (
+
+  <div
+    className="image-viewer"
+    onClick={()=>
+      setImagenAmpliada(null)
+    }
+  >
+
+    <button
+      className="image-viewer-close"
+      onClick={()=>
+        setImagenAmpliada(null)
+      }
+    >
+      X
+    </button>
+
+    <img
+      src={imagenAmpliada}
+      className="image-viewer-img"
+    />
+
+  </div>
+
+)}
+
+{modalProveedor && proveedorEditando && (
+
+  <div
+    className="modal"
+    onClick={()=>
+      setModalProveedor(false)
+    }
+  >
+
+    <div
+      className="modal-box"
+      style={{ maxWidth:500 }}
+      onClick={e=>e.stopPropagation()}
+    >
+
+      <div className="flex-between">
+
+        <div style={{ fontSize:22, fontWeight:800 }}>
+          {
+            proveedorEditando.id
+            ? "Editar Empresa"
+            : "Nueva Empresa"
+          }
+        
+
+        <button
+          className="btn btn-danger"
+          onClick={()=>
+            setModalProveedor(false)
+          }
+        >
+          X
+        </button>
+</div>
+      </div>
+
+      <label>Nombre de empresa</label>
+      <input
+        value={proveedorEditando.nombre || ""}
+        onChange={e=>
+          setProveedorEditando({
+            ...proveedorEditando,
+            nombre:e.target.value
+          })
+        }
+      />
+<div>
+
+      <label>Teléfono</label>
+      <input
+        value={proveedorEditando.telefono || ""}
+        onChange={e=>
+          setProveedorEditando({
+            ...proveedorEditando,
+            telefono:e.target.value
+          })
+        }
+      />
+</div>
+      <label>Servicio</label>
+      <input
+        value={proveedorEditando.servicio || ""}
+        onChange={e=>
+          setProveedorEditando({
+            ...proveedorEditando,
+            servicio:e.target.value
+          })
+        }
+      />
+<div>
+
+      <label>Precio</label>
+      <input
+        type="number"
+        value={proveedorEditando.precio || 0}
+        onChange={e=>
+          setProveedorEditando({
+            ...proveedorEditando,
+            precio:e.target.value
+          })
+        }
+      />
+</div>
+      <div style={{
+        display:"flex",
+        justifyContent:"flex-end",
+        gap:12,
+        marginTop:28
+      }}>
+
+        <button
+          className="btn btn-ghost"
+          onClick={()=>
+            setModalProveedor(false)
+          }
+        >
+          Cancelar
+        </button>
+
+        <button
+          className="btn btn-primary"
+          onClick={guardarProveedor}
+        >
+          Guardar
+        </button>
+
+      </div>
+
+    </div>
+
+  </div>
+
+)}
+
+
+
+      </main>
+
+    </div>
+
+  );
+
+}
+
+
+if ("serviceWorker" in navigator) {
+
+  window.addEventListener("load", ()=>{
+
+    navigator.serviceWorker
+      .register("./service-worker.js");
+
+  });
+
+}
+
+ReactDOM.createRoot(
+  document.getElementById("root")
+).render(<App/>);
 
 </script>
 
 </body>
 </html>
+
+
+     
+
+
+
+
