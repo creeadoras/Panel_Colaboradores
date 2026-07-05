@@ -220,6 +220,10 @@
   background:#e39a37;
 }
 
+.btn.purple{
+  background:#8b5cf6;
+}
+
 .modal.wide{
   width:min(760px,100%);
 }
@@ -503,6 +507,16 @@
 .btn:disabled{
   opacity:.65;
   cursor:not-allowed;
+}
+
+.loader{
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  min-height:100vh;
+  font-size:20px;
+  font-weight:700;
+  color:#6f5a4a;
 }
 
 *{
@@ -929,13 +943,6 @@ const LOGO =
 function App(){
 
 
-const [itemEspecial,setItemEspecial] =
-useState({});
-
-const [cantidadEspecial,setCantidadEspecial] =
-useState({});
-
-
 const [installPrompt,setInstallPrompt] =
 useState(null);
 
@@ -1081,6 +1088,8 @@ async function instalarApp(){
 
   await installPrompt.userChoice;
 
+  setInstallPrompt(null);
+
 }
 
 
@@ -1145,6 +1154,42 @@ async function guardarProveedor(){
 
 }
 
+async function eliminarEmpresa(empresa){
+
+  const confirmado =
+  window.confirm(
+    `¿Eliminar la empresa "${empresa.nombre}"?`
+  );
+
+  if(!confirmado){
+    return;
+  }
+
+  const { error } = await db
+  .from("proveedores")
+  .delete()
+  .eq("id",empresa.id);
+
+  if(error){
+
+    console.error(
+      "Error eliminando empresa:",
+      error.message
+    );
+
+    alert("No se pudo eliminar la empresa.");
+    return;
+
+  }
+
+  setEmpresas(prev=>
+    prev.filter(e=>
+      e.id !== empresa.id
+    )
+  );
+
+}
+
 
 
 function abrirNuevoMaterial(){
@@ -1172,7 +1217,7 @@ async function eliminarMaterial(material){
 
   const confirmado =
   window.confirm(
-    `Â¿Eliminar el material "${material.nombre}"?`
+    `¿Eliminar el material "${material.nombre}"?`
   );
 
   if(!confirmado){
@@ -1656,9 +1701,7 @@ async function guardarControlEtapa(){
         : (item.recibido || 0)
     }));
 
-    if(todoCompleto){
-      checklist = await devolverStockSiCorresponde(checklist);
-    }
+    checklist = await devolverStockSiCorresponde(checklist);
 
   }
 
@@ -1795,7 +1838,7 @@ async function eliminarItemChecklist(
 
 const confirmar =
 window.confirm(
-  "Â¿Eliminar este elemento?"
+  "¿Eliminar este elemento?"
 );
 
 if(!confirmar){
@@ -1870,77 +1913,6 @@ function abrirModalEspecialPreparacion(presupuesto){
     nombre.trim(),
     cantidad
   );
-
-}
-
-
-async function agregarItemEspecialAlChecklist(
-  presupuesto,
-  nombre,
-  cantidad
-){
-
-  const nuevoItem = {
-    id:`especial-${Date.now()}`,
-
-    tipo:"especial",
-
-    label:`${cantidad}x ${nombre}`,
-
-    imagen:"",
-
-    cantidad:cantidad,
-
-    descripcion:"Item especial agregado en preparación",
-
-    cargado:false,
-
-    enviado:cantidad,
-
-    recibido:"",
-
-    regreso_ok:false,
-
-    regreso_detalle:"",
-
-    stock_devuelto:false
-  };
-
-  const nuevoChecklist = [
-    ...(presupuesto.checklist || []),
-    nuevoItem
-  ];
-
-  setPresupuestos(prev=>
-    ordenarPresupuestos(
-      prev.map(p=>
-        p.id === presupuesto.id
-        ? {
-            ...p,
-            checklist:nuevoChecklist
-          }
-        : p
-      )
-    )
-  );
-
-  const { error } = await db
-  .from("presupuestos")
-  .update({
-    checklist:nuevoChecklist
-  })
-  .eq("id",presupuesto.id);
-
-  if(error){
-
-    console.error(
-      "Error agregando item especial:",
-      error.message
-    );
-
-    alert("No se pudo agregar el item especial.");
-
-  }
 
 }
 
@@ -2557,12 +2529,14 @@ checklist.filter(
 
             <div className="page-title">
               Inicio 
-  <button
-    className="btn btn-green"
-    onClick={instalarApp}
-  >
-    Instalar App
-  </button>
+  {installPrompt && (
+    <button
+      className="btn green"
+      onClick={instalarApp}
+    >
+      Instalar App
+    </button>
+  )}
             </div>
 
 
@@ -2988,7 +2962,7 @@ checklist.filter(
                   </strong>
 
 <button
-  className="btn btn-purple"
+  className="btn purple"
   onClick={()=>
     abrirModalEspecialPreparacion(p)
   }
@@ -3072,8 +3046,8 @@ checklist.filter(
                       <span>
                         {
                           e.presente
-                          ? "âœ…"
-                          : "â³"
+                          ? "✅"
+                          : "⏳"
                         }
                       </span>
 
@@ -3554,13 +3528,6 @@ checklist.filter(
 
 </div>
 
-      {materialForm.imagen && (
-        <img
-          src={materialForm.imagen}
-          className="material-img"
-        />
-      )}
-
       <div className="actions">
 
         <button
@@ -3819,96 +3786,96 @@ checklist.filter(
 
 {modalProveedor && proveedorEditando && (
 
-  <div
-    className="modal"
-    onClick={()=>
-      setModalProveedor(false)
-    }
-  >
+  <div className="modal-backdrop">
 
-    <div
-      className="modal-box"
-      style={{ maxWidth:500 }}
-      onClick={e=>e.stopPropagation()}
-    >
+    <div className="modal">
 
-      <div className="flex-between">
+      <div className="modal-header">
 
-        <div style={{ fontSize:22, fontWeight:800 }}>
+        <h2>
           {
             proveedorEditando.id
             ? "Editar Empresa"
             : "Nueva Empresa"
           }
-        
+        </h2>
 
         <button
-          className="btn btn-danger"
+          className="modal-close"
           onClick={()=>
             setModalProveedor(false)
           }
         >
           X
         </button>
-</div>
+
       </div>
 
-      <label>Nombre de empresa</label>
-      <input
-        value={proveedorEditando.nombre || ""}
-        onChange={e=>
-          setProveedorEditando({
-            ...proveedorEditando,
-            nombre:e.target.value
-          })
-        }
-      />
-<div>
+      <label className="form-field">
+        Nombre de empresa
 
-      <label>Teléfono</label>
-      <input
-        value={proveedorEditando.telefono || ""}
-        onChange={e=>
-          setProveedorEditando({
-            ...proveedorEditando,
-            telefono:e.target.value
-          })
-        }
-      />
-</div>
-      <label>Servicio</label>
-      <input
-        value={proveedorEditando.servicio || ""}
-        onChange={e=>
-          setProveedorEditando({
-            ...proveedorEditando,
-            servicio:e.target.value
-          })
-        }
-      />
-<div>
+        <input
+          value={proveedorEditando.nombre || ""}
+          onChange={e=>
+            setProveedorEditando({
+              ...proveedorEditando,
+              nombre:e.target.value
+            })
+          }
+        />
 
-      <label>Precio</label>
-      <input
-        type="number"
-        value={proveedorEditando.precio || 0}
-        onChange={e=>
-          setProveedorEditando({
-            ...proveedorEditando,
-            precio:e.target.value
-          })
-        }
-      />
-</div>
-      <div style={{
-        display:"flex",
-        justifyContent:"flex-end",
-        gap:12,
-        marginTop:28
-      }}>
+      </label>
+
+      <label className="form-field">
+        Teléfono
+
+        <input
+          value={proveedorEditando.telefono || ""}
+          onChange={e=>
+            setProveedorEditando({
+              ...proveedorEditando,
+              telefono:e.target.value
+            })
+          }
+        />
+
+      </label>
+
+      <label className="form-field">
+        Servicio
+
+        <input
+          value={proveedorEditando.servicio || ""}
+          onChange={e=>
+            setProveedorEditando({
+              ...proveedorEditando,
+              servicio:e.target.value
+            })
+          }
+        />
+
+      </label>
+
+      <label className="form-field">
+        Precio
+
+        <input
+          type="number"
+          value={proveedorEditando.precio || 0}
+          onChange={e=>
+            setProveedorEditando({
+              ...proveedorEditando,
+              precio:e.target.value
+            })
+          }
+        />
+
+      </label>
+
+      <div className="actions">
 
         <button
-          className="btn btn-ghost"
+          className="btn"
           onClick={()=>
             setModalProveedor(false)
           }
@@ -3917,7 +3884,7 @@ checklist.filter(
         </button>
 
         <button
-          className="btn btn-primary"
+          className="btn green"
           onClick={guardarProveedor}
         >
           Guardar
